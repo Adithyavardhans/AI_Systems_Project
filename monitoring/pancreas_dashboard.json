@@ -1,0 +1,142 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Predictions",
+      "id": 1,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(pancreas_prediction_total)",
+          "legendFormat": "Total Predictions"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      }
+    },
+    {
+      "type": "piechart",
+      "title": "Prediction Distribution",
+      "id": 2,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "pancreas_prediction_total",
+          "legendFormat": "{{class}}"
+        }
+      ],
+      "options": {
+        "legend": { "show": true }
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "Feedback Correctness (%)",
+      "id": 3,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(pancreas_feedback_total{result=\"correct\"}) / sum(pancreas_feedback_total) * 100",
+          "legendFormat": "Correct %"
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" },
+        "orientation": "horizontal"
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Predictions Over Time",
+      "id": 4,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(pancreas_prediction_total[5m])",
+          "legendFormat": "{{class}}"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "P95 Latency",
+      "id": 5,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(pancreas_inference_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "P95 Latency"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "P50 Latency",
+      "id": 6,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(pancreas_inference_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "P50 Latency"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "P99 Latency",
+      "id": 7,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(pancreas_inference_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "P99 Latency"
+        }
+      ]
+    },
+    {
+      "type": "heatmap",
+      "title": "Latency Histogram",
+      "id": 8,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(pancreas_inference_latency_seconds_bucket[5m])",
+          "legendFormat": "{{le}}"
+        }
+      ]
+    },
+    {
+      "type": "piechart",
+      "title": "Feedback Breakdown",
+      "id": 9,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "pancreas_feedback_total",
+          "legendFormat": "{{result}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1,
+  "title": "Pancreas Tumor Classifier Dashboard"
+}

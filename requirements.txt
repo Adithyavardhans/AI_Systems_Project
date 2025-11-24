@@ -1,7 +1,0 @@
-torch
-torchvision
-numpy
-pillow
-gradio
-prometheus_client
-opencv-python-headless
